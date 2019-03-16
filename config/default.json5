@@ -1,3 +1,4 @@
 {
   rootDpath: '',
+  logConfFpath: './config/log4js.json5'
 }

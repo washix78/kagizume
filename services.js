@@ -1,18 +1,12 @@
 'use strict';
 
 var fs = require('fs');
-var log4js = require('log4js');
 var path = require('path');
 var trash = require('trash');
 
-log4js.configure('./config/log4js.json');
-var logger = log4js.getLogger('default');
-
 module.exports.listDpaths = (rootDpath) => {
   if (!fs.existsSync(rootDpath) || !fs.statSync(rootDpath).isDirectory()) {
-    var message = `Not directory ${rootDpath}.`;
-    logger.error(message);
-    throw new Error(message);
+    throw new Error(`Not directory ${rootDpath}.`);
   }
   var allDpaths = [];
 
@@ -52,7 +46,6 @@ module.exports.removeFpaths = (fpaths) => {
   trash(fpaths).then(() => {
     return true;
   }).catch((e) => {
-    logger.error(e.stack);
     return e;
   });
 };

@@ -1,0 +1,22 @@
+{
+  appenders: {
+    stdout: {
+      type: 'stdout'
+    },
+    file: {
+      type: 'file',
+      // ./logs/name.log
+      filename: './logs/services.log'
+    }
+  },
+  categories: {
+    default: {
+      appenders: [
+        'stdout',
+        'file'
+      ],
+      level: 'info'
+    }
+  }
+}
+
