@@ -8,6 +8,7 @@ module.exports.listDpaths = (rootDpath) => {
   if (!fs.existsSync(rootDpath) || !fs.statSync(rootDpath).isDirectory()) {
     throw new Error(`Not directory ${rootDpath}.`);
   }
+  console.log(rootDpath);
   var allDpaths = [];
 
   var loop = (topDpath) => {
@@ -17,6 +18,9 @@ module.exports.listDpaths = (rootDpath) => {
       return fs.statSync(test).isDirectory();
     });
     Array.prototype.push.apply(allDpaths, paths);
+    paths.forEach((nextPath) => {
+      loop(nextPath);
+    });
   };
   loop(rootDpath);
 
@@ -32,7 +36,7 @@ module.exports.listFpaths = (dpath) => {
   return fpaths;
 };
 
-module.exports.removeFpaths = (fpaths) => {
+module.exports.removeFpaths = async (fpaths) => {
   if (!Array.isArray(fpaths)) {
     throw new Error('Not array.');
   }
@@ -43,11 +47,11 @@ module.exports.removeFpaths = (fpaths) => {
     }
   });
 
-  trash(fpaths).then(() => {
-    return true;
-  }).catch((e) => {
-    return e;
-  });
+  try {
+    await trash(fpaths, { glob: false });
+  } catch (e) {
+    throw e;
+  }
 };
 
 module.exports.moveFpaths = (apaths, bpaths) => {
