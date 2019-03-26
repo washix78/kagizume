@@ -27,3 +27,7 @@ h1 {
 .negative {
   background-color: aqua;
 }
+
+.selected {
+  border: solid 2px red;
+}
