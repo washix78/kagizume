@@ -28,6 +28,19 @@ h1 {
   background-color: aqua;
 }
 
-.selected {
+img.selected {
   border: solid 2px red;
+}
+
+#dir_menu {
+  border: solid 1px black;
+}
+
+#dir_menu span {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dir_menu .selected {
+  font-weight: bold;
 }

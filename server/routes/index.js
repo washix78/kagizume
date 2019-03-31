@@ -64,7 +64,12 @@ router.put('/file', (req, res, next) => {
 
 router.delete('/file', (req, res, next) => {
   try {
-    services.removeFpaths(req.body.fpaths);
+    console.log('OKOKOKOKOKOKOKOKOKO');
+    console.log(req.body);
+    // services.removeFpaths(req.body.fpaths);
+    res.status(400).json({
+      message: 'uiui'
+    });
   } catch (e) {
     logger.error(e.stack);
     res.status(400).json({
