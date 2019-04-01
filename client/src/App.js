@@ -52,7 +52,9 @@ class App extends Component {
     });
   }
 
-  loadFiles(dir, i) {
+  loadFiles(i) {
+    const { dirs } = this.state;
+    const dir = dirs[i];
     Promise.resolve().then(() => {
       const params = new URLSearchParams();
       params.set('dir', dir);
@@ -62,7 +64,7 @@ class App extends Component {
     }).then((files) => {
       return files.map((file) => {
         const { info } = this.state;
-        const src = file.substring(info.rootDir.length).split(info.sep).reduce((part, name) => {
+        const src = file.substr(info.rootDir.length).split(info.sep).reduce((part, name) => {
           return `${part}/${name}`;
         });
         const name = file.substr(dir.length + 1);
@@ -121,7 +123,7 @@ class App extends Component {
   }
 
   deleteImages() {
-    const { files } = this.state;
+    const { files, cdI } = this.state;
     const targets = files.filter((file) => {
       return file.selected;
     }).map((file) => {
@@ -152,8 +154,11 @@ class App extends Component {
     }).then((res) => {
       return res.json();
     }).then((result) => {
+      // TODO
       alert('iii');
       console.log(result);
+
+      this.loadFiles(cdI);
     }).catch((e) => {
       if (e instanceof Error) {
         console.error(e.stack);
@@ -162,6 +167,45 @@ class App extends Component {
         alert('kjkjfksj');
         console.log(e);
       }
+    });
+  }
+
+  rename(i) {
+    const { files, cdI } = this.state;
+    const target = files[i];
+    const newName = window.prompt(`Rename ${target.name} ->`, `${target.name}`);
+    if (newName === undefined || newName === null || newName.length === 0) {
+      return;
+    }
+
+    const isUnique = files.every((file) => {
+      return file.name !== newName;
+    });
+    if (!isUnique) {
+      alert(`Error: Same name.`);
+      return;
+    }
+
+    Promise.resolve().then(() => {
+      return fetch('/file', {
+        method: 'PUT',
+        body: JSON.stringify({
+          path: target.path,
+          name: newName
+        }),
+      });
+    }).then((res) => {
+      const json = res.json();
+      if (json.message) {
+        throw new Error(json.message);
+      } else {
+        return json;
+      }
+    }).then(() => {
+      this.loadFiles(cdI);
+    }).catch((e) => {
+      console.error(e.stack);
+      alert(`Error: ${e.message}`);
     });
   }
 
@@ -183,7 +227,7 @@ class App extends Component {
             <li
               key={dir}
               className={cdI === i ? 'selected' : ''}
-              onClick={() => this.loadFiles(dir, i)}
+              onClick={() => this.loadFiles(i)}
             >
               {dir}
             </li>
@@ -210,7 +254,7 @@ class App extends Component {
               </div>
               <div>
                 <span>{file.name}</span>
-                <button>Rename</button>
+                <button onClick={() => this.rename(i)}>Rename</button>
               </div>
             </div>
             ))}
