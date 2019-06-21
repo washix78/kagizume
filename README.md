@@ -1,5 +1,9 @@
 # kagizume
 
+## Configure for developing
+
+Touch file `config/local.json5`.
+
 ## Server start
 
 ```
@@ -17,6 +21,6 @@ npm test
 
 ## Milestone
 
-* List directories
-* List files
-* Delete files
+* [_] List directories
+* [_] List files
+* [ ] Delete files
